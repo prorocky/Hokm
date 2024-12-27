@@ -7,3 +7,7 @@
  * 
  * 
  */
+
+const cardObjectDefinitions = [
+
+]
