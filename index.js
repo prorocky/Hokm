@@ -36,8 +36,8 @@ function createCard(cardItem, container, onClickHandler) {
     const cardInnerElem = createElement('div')
     const cardFrontElem = createElement('div')
     const cardFrontImg = createElement('img')
-    // const cardBackElem = createElement('div')
-    // const cardBackImg = createElement('img')
+    const cardBackElem = createElement('div')
+    const cardBackImg = createElement('img')
 
     addClassToElement(cardElem, 'card')
 
@@ -48,10 +48,10 @@ function createCard(cardItem, container, onClickHandler) {
     addClassToElement(cardFrontElem, 'card-front')
 
     // add class to back card element
-    // addClassToElement(cardBackElem, 'card-back')
+    addClassToElement(cardBackElem, 'card-back')
 
     // add src attribute and approppriate value to img element (back of card)
-    // addSrcToImageElem(cardBackImg, cardBackImgPath)
+    addSrcToImageElem(cardBackImg, cardBackImgPath)
 
     // add src attribute and appropriate value to img element (front of card)
     addSrcToImageElem(cardFrontImg, cardItem.imgPath)
@@ -60,19 +60,19 @@ function createCard(cardItem, container, onClickHandler) {
     addClassToElement(cardFrontImg, 'card-img')
 
     // assign class to back image element
-    // addClassToElement(cardBackImg, 'card-img')
+    addClassToElement(cardBackImg, 'card-img')
 
     // add front image element as child element to front card element
     addChildElement(cardFrontElem, cardFrontImg)
 
     // add back image element as child element to back card element
-    // addChildElement(cardBackElem, cardBackImg)
+    addChildElement(cardBackElem, cardBackImg)
 
     // add front card element as child element to inner card element
     addChildElement(cardInnerElem, cardFrontElem)
 
     // add back card element as child element to inner card element
-    // addChildElement(cardInnerElem, cardBackElem)
+    addChildElement(cardInnerElem, cardBackElem)
 
     // add inner card element as child element to card element
     addChildElement(cardElem, cardInnerElem)
@@ -114,6 +114,7 @@ function handleHokmSelection(cardElem, suit) {
         let remainingCards = deck.hakemSecondDeal();
         remainingCards.forEach(card => createCard(card, cardContainerElem, handleHokmSelection));
     } else {
+        // eventually change this to "playing" the card
         cardElem.remove();
     }
    

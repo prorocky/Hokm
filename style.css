@@ -33,6 +33,8 @@ main {
     width: var(--card-width);
     cursor: pointer;
     z-index: auto;
+    /* this is for flipping */
+    perspective: 1000px;
 }
 
 .card-inner {
@@ -44,12 +46,23 @@ main {
     transform-style: preserve-3d;
 }
 
-.card-front {
+.card-front,
+.card-back {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+}
+
+.card-front {
+    transform: rotateY(0deg);
+}
+
+.card-back {
+    transform: rotateY(180deg);
 }
 
 .card-img {
