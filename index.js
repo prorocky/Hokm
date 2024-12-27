@@ -7,60 +7,36 @@
  * 
  * 
  */
+import { Deck, Game } from './gameLogic.js';
 
+// DOM elements
 const cardBackImgPath = '/images/cards/B.png'
+const cardContainerElem = document.querySelector('.card-container')
 
-cardContainerElem = document.querySelector('.card-container')
-
-class Card {
-    constructor(suit, rank) {
-        this.suit = suit;
-        this.rank = rank;
-        this.imgPath = "/images/cards/" + String(rank) + String(suit) + ".png"
-    }
+// utility functions
+function createElement(elemType) {
+    return document.createElement(elemType)
 }
-class Deck {
-    constructor() {
-        this.suits = ["S", "H", "C", "D"];
-        this.ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"];
-        this.deck = [];
-        this.initializeDeck();
-    }
-    
-    initializeDeck() {
-        this.deck = [];
-        for (let suit of this.suits) {
-            for (let rank of this.ranks) {
-                this.deck.push(new Card(suit, rank));
-            }
-        }
-    }
 
-    shuffle() {
-        for (let i = this.deck.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
-        }
-    }
+function addClassToElement(elem, className) {
+    elem.classList.add(className)
+}
 
-    deal() {
-        return this.deck.splice(0, 13);
-    }
+function addSrcToImageElem(imgElem, src) {
+    imgElem.src = src
+}
 
-    reset() {
-        this.initializeDeck();
-        this.shuffle();
-    }
+function addChildElement(parentElem, childElem) {
+    parentElem.appendChild(childElem)
 }
 
 // Call this function when you want to add cards to your hand/make them visible
-function createCard(cardItem, container) {
+function createCard(cardItem, container, onClickHandler) {
     const cardElem = createElement('div')
     const cardInnerElem = createElement('div')
     const cardFrontElem = createElement('div')
-    // const cardBackElem = createElement('div')
-
     const cardFrontImg = createElement('img')
+    // const cardBackElem = createElement('div')
     // const cardBackImg = createElement('img')
 
     addClassToElement(cardElem, 'card')
@@ -104,46 +80,45 @@ function createCard(cardItem, container) {
     // add card to card container
     addChildElement(container, cardElem)
 
+    cardElem.addEventListener('click', () => onClickHandler(cardElem, cardItem.suit));
 }
 
-function createElement(elemType) {
-    return document.createElement(elemType)
+// Deal cards to Hakem in order to pick hokm
+let _Game = new Game();
+let deck = _Game.deck;
+deck.shuffle();
+let hokmSelected = false;
+let P1_hand = deck.hakemInitialDeal();
+
+function handleHokmSelection(cardElem, suit) {
+    if (!hokmSelected) {
+        _Game.setHokm(suit);
+        let hokm = '';
+        switch (suit) {
+            case "S":
+                hokm = "Spade";
+                break;
+            case "H":
+                hokm = "Heart";
+                break;
+            case "C":
+                hokm = "Club";
+                break;
+            default:
+                hokm = "Diamond";
+                break;
+        }
+        alert(`Hokm is set to ${hokm}`);
+        hokmSelected = true;
+        // Deal remaining cards (8)
+        let remainingCards = deck.hakemSecondDeal();
+        remainingCards.forEach(card => createCard(card, cardContainerElem, handleHokmSelection));
+    } else {
+        cardElem.remove();
+    }
+   
+
+    
 }
 
-function addClassToElement(elem, className) {
-    elem.classList.add(className)
-}
-
-function addSrcToImageElem(imgElem, src) {
-    imgElem.src = src
-}
-
-function addChildElement(parentElem, childElem) {
-    parentElem.appendChild(childElem)
-}
-// cardContainerElem
-
-// let cardCount = 13;
-// const cardContainer = document.getElementById('cardContainer');
-
-// function updateGridLayout() {
-//     const columns = Math.max(cardCount, 1);
-//     cardContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-// }
-
-// function loseCard() {
-//     if (cardCount > 0) {
-//         cardCount--;
-//         const lastCard = cardContainer.lastElementChild;
-//         cardContainer.removeChild(lastCard);
-
-//         updateGridLayout();
-//     }
-// }
-
-// updateGridLayout();
-let cardCount = 13;
-const myDeck = new Deck();
-myDeck.shuffle();
-let myHand = myDeck.deal();
-myHand.forEach(card => createCard(card, cardContainerElem));
+P1_hand.forEach(card => createCard(card, cardContainerElem, handleHokmSelection));
