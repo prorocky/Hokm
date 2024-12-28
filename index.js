@@ -1,14 +1,28 @@
 /*
- *  Author: Oran Shadian
- *
- *  Card Game Hokm
- * 
- *  
- * 
- * 
- */
-import { Deck, Game } from './gameLogic.js';
+    Import 
 
+
+
+
+ */
+import Player from './Player.js';
+import Game from './GameLogic.js';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 // DOM elements
 const cardBackImgPath = '/images/cards/B.png'
 const cardContainerElem = document.querySelector('.card-container')
@@ -38,6 +52,10 @@ function createCard(cardItem, container, onClickHandler) {
     const cardFrontImg = createElement('img')
     const cardBackElem = createElement('div')
     const cardBackImg = createElement('img')
+
+    // store rank and suit
+    cardElem.dataset.rank = cardItem.rank;
+    cardElem.dataset.suit = cardItem.suit;
 
     addClassToElement(cardElem, 'card')
 
@@ -82,15 +100,22 @@ function createCard(cardItem, container, onClickHandler) {
 
     cardElem.addEventListener('click', () => onClickHandler(cardElem, cardItem.suit));
 }
-
+*/
 // Deal cards to Hakem in order to pick hokm
-let _Game = new Game();
-let deck = _Game.deck;
-deck.shuffle();
-let hokmSelected = false;
-let P1_hand = deck.hakemInitialDeal();
+const _Game = new Game();
+_Game.addPlayer(new Player('User', false));
+_Game.addPlayer(new Player('Bot 1', true));
+// add more players eventually
+// _Game.addPlayer(new Player('Bot 1', true));
+// _Game.addPlayer(new Player('Bot 1', true));
 
-function handleHokmSelection(cardElem, suit) {
+_Game.startGame();
+
+
+let hokmSelected = false;
+
+
+function handleHokmSelection(cardElem, suit, container) {
     if (!hokmSelected) {
         _Game.setHokm(suit);
         let hokm = '';
@@ -111,15 +136,24 @@ function handleHokmSelection(cardElem, suit) {
         alert(`Hokm is set to ${hokm}`);
         hokmSelected = true;
         // Deal remaining cards (8)
-        let remainingCards = deck.hakemSecondDeal();
-        remainingCards.forEach(card => createCard(card, cardContainerElem, handleHokmSelection));
+        let remainingCards = deck.deal4();
+        remainingCards.forEach(card => createCard(card, container, handleHokmSelection));
+        let remainingCards2 = deck.deal4();
+        remainingCards2.forEach(card => createCard(card, container, handleHokmSelection));
     } else {
+        // access rank and suit of card
+        // console.log(cardElem.dataset.rank);
+        // console.log(cardElem.dataset.suit);
+
+
         // eventually change this to "playing" the card
         cardElem.remove();
+
+        
     }
    
 
     
 }
 
-P1_hand.forEach(card => createCard(card, cardContainerElem, handleHokmSelection));
+// P1_hand.forEach(card => createCard(card, cardContainerElem, handleHokmSelection));
